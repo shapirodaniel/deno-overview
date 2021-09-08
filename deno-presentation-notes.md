@@ -463,58 +463,58 @@ const proc = Deno.run({ cmd: ["cat", "/etc/passwd"] });
 - allow any subprocess to run
   `$ deno run --allow-run run.js`
 
-  ## Load and run wasm
+## Load and run wasm
 
-  Note: requires `application/wasm` MIME type
+Note: requires `application/wasm` MIME type
 
-  ```javascript
-  const { instance, module} = await WebAssembly.instantiateStreaming(
-    fetch("https://wpt.live/wasm/incrementer.wasm")
-  )
-  const increment = instance.exports.increment as (input: number) => number
-  conosle.log(increment(42))
-  ```
+```javascript
+const { instance, module} = await WebAssembly.instantiateStreaming(
+  fetch("https://wpt.live/wasm/incrementer.wasm")
+)
+const increment = instance.exports.increment as (input: number) => number
+conosle.log(increment(42))
+```
 
-  ## Debugging
+## Debugging
 
-  Deno supports V8 Inspector Protocol
-  Debug Deno programs using Chrome DevTools or VSCode
-  `$ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/http/file_server.ts`
-  ...Debugger listening on ws://127.0.0.1:9229/ws/...
+Deno supports V8 Inspector Protocol
+Debug Deno programs using Chrome DevTools or VSCode
+`$ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/http/file_server.ts`
+...Debugger listening on ws://127.0.0.1:9229/ws/...
 
-  > > in chrome / edge, open chrome://inspect, click <code>Inspect</code> next to target
+> > in chrome / edge, open chrome://inspect, click <code>Inspect</code> next to target
 
-  ## Stability and production-readiness
+## Stability and production-readiness
 
-  Deno's standard modules are <em>not yet stable</em>
+Deno's standard modules are <em>not yet stable</em>
 
-  - currently version the standard modules differently from CLI to reflect this
-  - unlike Deno namespace, use of standard modules do not require --unstable flag, unless standard module itself uses an unstable Deno feature
-  - note: this is a deviation from the general pattern requiring --unstable flags!
+- currently version the standard modules differently from CLI to reflect this
+- unlike Deno namespace, use of standard modules do not require --unstable flag, unless standard module itself uses an unstable Deno feature
+- note: this is a deviation from the general pattern requiring --unstable flags!
 
-  ## Query permissions at runtime
+## Query permissions at runtime
 
-  Occasionally you'll want to check whether permissions have been granted
+Occasionally you'll want to check whether permissions have been granted
 
-  given: `$ deno run --allow-read=/foo main.ts`
+given: `$ deno run --allow-read=/foo main.ts`
 
-  ```typescript
-  const desc1 = { name: "read", path: "/foo/bar" } as const;
-  // PermissionStatus { state: "granted" }
+```typescript
+const desc1 = { name: "read", path: "/foo/bar" } as const;
+// PermissionStatus { state: "granted" }
 
-  // global write permission
-  const desc2 = { name: "write", path: "/foo" } as const;
-  // PermissionStatus { state: "prompt" }
-  // alert: Deno requests write access to "/foo". Grant? [y/n (y = yes allow, n = no deny)]
-  // n
-  // PermissionStatus { state: "denied" }
-  ```
+// global write permission
+const desc2 = { name: "write", path: "/foo" } as const;
+// PermissionStatus { state: "prompt" }
+// alert: Deno requests write access to "/foo". Grant? [y/n (y = yes allow, n = no deny)]
+// n
+// PermissionStatus { state: "denied" }
+```
 
-  Downgrade permission from "granted" to "prompt"
+Downgrade permission from "granted" to "prompt"
 
-  ```javascript
-  await Deno.permissions.revoke(desc1);
+```javascript
+await Deno.permissions.revoke(desc1);
 
-  console.log(await Deno.permissions.query(desc1));
-  // PermissionStatus { state: "prompt" }
-  ```
+console.log(await Deno.permissions.query(desc1));
+// PermissionStatus { state: "prompt" }
+```
