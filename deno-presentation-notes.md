@@ -518,3 +518,227 @@ await Deno.permissions.revoke(desc1);
 console.log(await Deno.permissions.query(desc1));
 // PermissionStatus { state: "prompt" }
 ```
+
+# Web APIs
+
+<code>fetch</code>
+
+- no cookie jar
+- does not follow same-origin policy (Deno user agent has no concept of origins)
+- Deno doesn't need to protet against leaking authenticated data cross origin!
+- does not implement Origin header, CORS protocol, CORB, Cross-Origin-Resource-Policy header, atomic HTTP redirect handling, or opaquedirect response
+
+<code>CustomEvent, EventTarget, EventListener</code>
+
+- events don't bubble (Deno has no DOM hierarchy, no tree to bubble through)
+
+<code>Web Worker API</code>
+
+- execute code in separate thread
+- no workers from blob URLs
+- posted data is serialized to JSON rather than structured cloning algorithm which supports complex types, ex File, Blob, ArrayBuffer (and JSON)
+- ownership can't be transferred between workers
+
+Deno also supports the usual APIs:
+
+- Blob, Console, FormData, Performance, setTimeout/Interval, clearInterval
+- Streams API, URL, URLSearchParams, WebSocket
+
+# HTTP Server APIs
+
+```typescript
+const server = Deno.listen({ port: 8080 });
+
+// listen for TLS
+const server = Deno.listenTls({
+  port: 8443,
+  certFile: "localhost.crt", // req
+  keyFile: "localhost.key", // req
+  alpnProtocols: ["h2", "http/1.1"], // opt, necessary for HTTP/2 support (protocol negotiation happens during TLS handshake)
+});
+```
+
+return value is a Deno.Listener, an async iterable that yields Deno.Conn and provides methods for handling connections
+
+```typescript
+const server = Deno.listen({ port: 8080 });
+
+// iterable...
+for await (const conn of server) {
+  // handle connection
+}
+
+// or...
+while (true) {
+  try {
+    const conn = await server.accept();
+    // handle connection
+  } catch (err) {
+    // listener closed
+    break;
+  }
+}
+
+// close listener with .close() method
+// to handle HTTP requests within server connections, IIFE or closure via function
+
+const handleHTTP = async () => {
+  const httpConn = Deno.serveHttp(conn);
+  for await (const requestEvent of httpConn) {
+    // handle requestEvent
+  }
+};
+
+const server = Deno.listen({ port: 8080 });
+for await (const conn of server) {
+  handle(conn);
+}
+
+// .respondWith() to complete a request, takes a Response object of Promise resolving to a Response object
+const handle(conn: Deno.Conn) = async () => {
+  const httpConn = Deno.serveHttp(conn)
+  for await (const requestEvent of httpConn){
+    await requestEvent.respondWith(
+      new Response("hello world", {
+        status: 200,
+      })
+    )
+  }
+}
+```
+
+serving websockets
+
+```typescript
+const handle(conn: Deno.Conn) = async () => {
+  const httpConn = Deno.serveHttp(conn)
+  for await (const requestEvent of httpConn){
+    await requestEvent.respondWith(
+      handleReq(requestEvent.request)
+    )
+  }
+}
+
+const handleReq(req: Request): Response {
+  if (req.headers.get("upgrade") !== "websocket"){
+    return new Response("request isn't trying to upgrade to websocket")
+  }
+
+  const { socket, response } = Deno.upgradeWebSocket(req)
+  socket.onopen = () => console.log("socket opened")
+
+  socket.onmessage = e => {
+    console.log("socket message:", e.data)
+    socket.send(new Date().toString())
+  }
+
+  socket.onerror = e => console.log("socket errored", e.message)
+  socket.onclose = () => console.log("socket closed")
+  return response
+}
+```
+
+# Local/SessionStorage
+
+works as usual
+
+# Web Worker API
+
+workers can be used to run code on multiple threads
+
+- each Worker instance is run on a separate thread dedicated to that worker only
+- Deno supports module type workers >> pass `type: "module"` option when creating a new worker!
+
+```typescript
+new Worker(new URL("./worker.js", import.meta.url).href, { type: "module" });
+```
+
+workers require --allow-read for local modules, --allow-net for remote modules
+
+`unstable`: pass <code>{ deno: { namespace: true }}</code> in options to use Deno inside worker
+
+```typescript
+const worker = new Worker(new URL("./worker.js", import.meta.url).href, {
+  type: "module",
+  deno: {
+    namespace: true,
+  },
+});
+
+worker.postMessage({ filename: "./log.txt" });
+
+// in worker.js
+self.onmessage = async (e) => {
+  const { filename } = e.data;
+  const text = await Deno.readTextFile(filename);
+  console.log(text);
+  self.close();
+};
+
+// workers can receive permissions field in options
+options: {
+  ...,
+  permissions: {
+    read: [
+      "/path1.txt",
+      "./worker/file_2.txt"
+    ]
+  }
+}
+```
+
+# Best practices for remote import
+
+- specify version
+- import and re-export external libs in central `deps.ts` file
+  (akin to `package.json`)
+
+```typescript
+// deps.ts
+export {
+  assert,
+  assertEquals,
+  assertStrContains,
+} from "https://deno.land/std@0.106.0/testing/asserts.ts";
+
+// elsewhere
+import { assertEQuals, runTests, test } from "./deps.ts";
+```
+
+- check $DENO_DIR into source control to avoid brittle servers and outages
+  preventing access to deps
+
+- cache and generate lock files to monitor subresource integrity and guarantee stable versions across project lifetime
+
+`$ deno cache --lock=lock.json --lock-write src/deps.ts`
+`$ git add -u lock.json`
+`$ git commit -m "feat: add support for xyz with xyz-lib"`
+`$ git push`
+
+next collaborator reloads cache after pulling from source control
+`$ deno cache --reload --lock=lock.json src/deps.ts`
+`$ deno test --allow-read src`
+
+always cache remote deps!
+`$ deno run --lock=lock.json --cached-only mod.ts`
+
+## Private modules and tokens
+
+- specified on env var
+  `$ DENO_AUTH_TOKENS=a1b2c3@deno.land;f1e2g3h4@example.com:8080`
+
+Deno will set Authorization header of request to value of Bearer {token} -- allows remote server to recognize authorized req tied to specific, authenticated user, provide access to resources/modules on server
+
+# Node.js compatibility and differences
+
+- most of Node.js works
+- notably, no CommonJS support, only ES Modules (no require statements)
+- Node.js plugins are not supported, some built-ins like vm incompatible
+- std/node provides polyfills for Node.js built-ins
+
+to work with Node.js submodules that require `require` we build it
+
+```javascript
+const require = createRequire(import.meta.url);
+const path = require("path"); // etc
+```
