@@ -1256,7 +1256,7 @@ Deno checks only the <code>compilerOptions</code> field from the usual <code>tsc
 
 ## Types usage
 
-inline types usage
+Inline types usage
 
 ```typescript
 // @deno-types="./coolLib.d.ts"
@@ -1264,14 +1264,14 @@ import * as coolLib from "./coolLib.js";
 // now, typechecking will use the deno-types rather than coolLib.js
 ```
 
-include other files
+Include other files
 
 ```typescript
 /// <reference types="./coolLib.d.ts" />
 // javascript goes here...
 ```
 
-use X-TypeScript-Types header to resolve and typecheck remote modules
+Use X-TypeScript-Types header to resolve and typecheck remote modules
 
 ```
 HTTP/1.1 200 OK
@@ -1288,4 +1288,4 @@ Use [Skypack.dev](https://docs.skypack.dev/skypack-cdn/code/deno) CDN to resolve
 import React from "https://cdn.skypack.dev/react?dts";
 ```
 
-** Note: Deno supports a particular version of TypeScript bundled with the Deno release **
+<em>** Note: Deno supports a particular version of TypeScript bundled with the Deno release **</em>
