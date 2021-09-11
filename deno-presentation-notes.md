@@ -25,13 +25,13 @@ Note: it's not recommended to initialize these settings globally
 
 ## PowerShell Deno CLI Completions
 
-Open PowerShell and run the following command, replacing the path to your system
-powershell_profile.ps1
+Open PowerShell and run the following command to generate Deno's CLI commands
 
-<code>deno completions powershell >
-[path-to-system-powershell_profile.ps1-directory]/deno.ps1</code>
+<em>note: if you already have a <code>PowerShell_profile.ps1</code>, out-file to a different filename to avoid overwriting</em>
 
-Then invoke the script in your <code>Microsoft.PowerShell_profile.ps1</code>
+`$ deno completions powershell > <path-to-system-powershell_profile.ps1-directory>/deno.ps1`</code>
+
+Then, add this content to your <code>PowerShell_profile.ps1</code>
 
 </details>
 <br/>
