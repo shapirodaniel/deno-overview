@@ -819,16 +819,16 @@ Check $DENO_DIR into source control to avoid brittle servers and outages prevent
 
 Cache and generate lock files to monitor subresource integrity and guarantee stable versions across project lifetime
 
-`$ deno cache --lock=lock.json --lock-write src/deps.ts`
-`$ git add -u lock.json`
-`$ git commit -m "feat: add support for xyz with xyz-lib"`
+`$ deno cache --lock=lock.json --lock-write src/deps.ts`  
+`$ git add -u lock.json`  
+`$ git commit -m "feat: add support for xyz with xyz-lib"`  
 `$ git push`
 
-next collaborator reloads cache after pulling from source control
-`$ deno cache --reload --lock=lock.json src/deps.ts`
+next collaborator reloads cache after pulling from source control  
+`$ deno cache --reload --lock=lock.json src/deps.ts`  
 `$ deno test --allow-read src`
 
-always cache remote deps!
+always cache remote deps!  
 `$ deno run --lock=lock.json --cached-only mod.ts`
 
 </details><br/>
@@ -838,10 +838,10 @@ always cache remote deps!
 <details>
   <summary>Accessing modules in private repositories</summary><br/>
 You may want to import submodules from private repositories  
-Deno provides an environment variable to handle authentication via token
-
+Deno provides an environment variable to handle authentication via token:  
+  
 `$ DENO_AUTH_TOKENS=a1b2c3@deno.land;f1e2g3h4@example.com:8080`
-
+  
 Deno will set Authorization header of request to value of `Bearer {token}`  
 This allows the remote server to recognize authorized requests tied to specific, authenticated users and provide access to resources/modules for import
 
