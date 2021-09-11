@@ -526,6 +526,8 @@ conosle.log(increment(42))
 
 # Debugging
 
+<details>
+<summary>Debugging options</summary><br/>
 Deno supports V8 Inspector Protocol
 Debug Deno programs using Chrome DevTools or VSCode
 
@@ -535,22 +537,31 @@ $ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/
 ```
 
 - in chrome / edge, open chrome://inspect, click <code>Inspect</code> next to target
-  <br/>
 
-## Stability and production-readiness
+</details><br/>
+
+# Stability and production-readiness
+
+<details>
+<summary>Overview of state of standard modules</summary><br/>
 
 Deno's standard modules are <em>not yet stable</em>
 
 - currently version the standard modules differently from CLI to reflect this
 - unlike Deno namespace, use of standard modules do not require --unstable flag, unless standard module itself uses an unstable Deno feature
 - note: this is a deviation from the general pattern requiring --unstable flags!
-  <br/><br/>
+</details><br/>
 
-## Query permissions at runtime
+# Query permissions at runtime
 
-Occasionally you'll want to check whether permissions have been granted
+<details>
+<summary>JIT permissions handling</summary><br/>
 
-given: `$ deno run --allow-read=/foo main.ts`
+Occasionally you'll want to check whether permissions have been granted; for example, given the following:
+
+```
+$ deno run --allow-read=/foo main.ts
+```
 
 ```typescript
 const desc1 = { name: "read", path: "/foo/bar" } as const;
@@ -573,8 +584,12 @@ console.log(await Deno.permissions.query(desc1));
 // PermissionStatus { state: "prompt" }
 ```
 
+</details><br/>
+
 # Web APIs
 
+<details>
+  <summary>Overview of Deno-supported Web APIs and modifications to ECMA standards</summary><br/>
 <code>fetch</code>
 
 - no cookie jar
@@ -593,12 +608,27 @@ console.log(await Deno.permissions.query(desc1));
 - posted data is serialized to JSON rather than structured cloning algorithm which supports complex types, ex File, Blob, ArrayBuffer (and JSON)
 - ownership can't be transferred between workers
 
-Deno also supports the usual APIs:
+Deno also supports:<br/>
+<code>Blob</code><br/>
+<code>Console</code><br/>
+<code>FormData</code><br/>
+<code>Performance</code><br/>
+<code>setTimeout</code><br/>
+<code>setInterval</code><br/>
+<code>clearInterval</code><br/>
+<code>Streams API</code><br/>
+<code>URL</code><br/>
+<code>URLSearchParams</code><br/>
+<code>WebSocket</code><br/>
 
-- Blob, Console, FormData, Performance, setTimeout/Interval, clearInterval
-- Streams API, URL, URLSearchParams, WebSocket
+</details><br/>
 
 # HTTP Server APIs
+
+<details>
+  <summary>Instantiating and handling server and network calls</summary><br/>
+
+## HTTP
 
 ```typescript
 const server = Deno.listen({ port: 8080 });
@@ -661,7 +691,7 @@ const handle(conn: Deno.Conn) = async () => {
 }
 ```
 
-serving websockets
+## Websockets
 
 ```typescript
 const handle(conn: Deno.Conn) = async () => {
@@ -692,22 +722,39 @@ const handleReq(req: Request): Response {
 }
 ```
 
+## HTTPS
+
+See server framework [Oak](https://github.com/oakserver/oak)
+
+</details><br/>
+
 # Local/SessionStorage
 
-works as usual
+<details>
+  <summary>Local data persistence</summary><br/>
+
+Deno supports `localStorage` and `sessionStorage`  
+note: `sessionStorage` boundary determined by process duration, `localStorage` persists across process restarts  
+\*\* see [Web Storage APIs in Deno](https://medium.com/deno-the-complete-reference/web-storage-apis-in-deno-8e982ea90085)
+
+</details><br/>
 
 # Web Worker API
 
-workers can be used to run code on multiple threads
+<details>
+  <summary>Concurrency via spawned and offloaded processes</summary><br/>
+Workers can be used to run code on multiple threads
 
 - each Worker instance is run on a separate thread dedicated to that worker only
-- Deno supports module type workers >> pass `type: "module"` option when creating a new worker!
+- Deno supports module type workers: pass `type: "module"` option when creating a new worker
 
 ```typescript
 new Worker(new URL("./worker.js", import.meta.url).href, { type: "module" });
 ```
 
-workers require --allow-read for local modules, --allow-net for remote modules
+<br/>
+
+Workers require --allow-read for local modules, --allow-net for remote modules
 
 `unstable`: pass <code>{ deno: { namespace: true }}</code> in options to use Deno inside worker
 
@@ -728,8 +775,13 @@ self.onmessage = async (e) => {
   console.log(text);
   self.close();
 };
+```
 
-// workers can receive permissions field in options
+<br/>
+
+Workers can receive permissions field in options
+
+```
 options: {
   ...,
   permissions: {
@@ -741,11 +793,16 @@ options: {
 }
 ```
 
-# Best practices for remote import
+</details><br/>
 
-- specify version
-- import and re-export external libs in central `deps.ts` file
-  (akin to `package.json`)
+# Remote Import
+
+<details>
+  <summary>Best practices for import-export logic</summary><br/>
+
+## Emulate node_modules through import, re-export
+
+Specify version and import, re-export external libs in central `deps.ts` file: this is akin to `package.json` functionality
 
 ```typescript
 // deps.ts
@@ -759,10 +816,16 @@ export {
 import { assertEQuals, runTests, test } from "./deps.ts";
 ```
 
-- check $DENO_DIR into source control to avoid brittle servers and outages
-  preventing access to deps
+<br/>
 
-- cache and generate lock files to monitor subresource integrity and guarantee stable versions across project lifetime
+## Hold deps in source control
+
+Check $DENO_DIR into source control to avoid brittle servers and outages preventing access to deps
+<br/><br/>
+
+## Cache lock files to monitor deps
+
+Cache and generate lock files to monitor subresource integrity and guarantee stable versions across project lifetime
 
 `$ deno cache --lock=lock.json --lock-write src/deps.ts`
 `$ git add -u lock.json`
@@ -775,6 +838,8 @@ next collaborator reloads cache after pulling from source control
 
 always cache remote deps!
 `$ deno run --lock=lock.json --cached-only mod.ts`
+
+</details><br/>
 
 ## Private modules and tokens
 
