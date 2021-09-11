@@ -855,7 +855,7 @@ This allows the remote server to recognize authorized requests tied to specific,
 
 ## Interoperability
 
-Deno standard library module std/node provides polyfills for Node.js built-ins
+Deno standard library module std/node provides polyfills for Node.js built-ins  
 Most Node.js APIs work "out-of-the-box." Notable exceptions are listed below:
 
 - no support for CommonJS, only ES Modules (no require statements)
