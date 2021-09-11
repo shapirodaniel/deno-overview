@@ -841,30 +841,52 @@ always cache remote deps!
 
 </details><br/>
 
-## Private modules and tokens
+# Private modules and tokens
 
-- specified on env var
-  `$ DENO_AUTH_TOKENS=a1b2c3@deno.land;f1e2g3h4@example.com:8080`
+<details>
+  <summary>Accessing modules in private repositories</summary><br/>
+You may want to import submodules from private repositories  
+Deno provides an environment variable to handle authentication via token
 
-Deno will set Authorization header of request to value of Bearer {token} -- allows remote server to recognize authorized req tied to specific, authenticated user, provide access to resources/modules on server
+`$ DENO_AUTH_TOKENS=a1b2c3@deno.land;f1e2g3h4@example.com:8080`
+
+Deno will set Authorization header of request to value of `Bearer {token}`  
+This allows the remote server to recognize authorized requests tied to specific, authenticated users and provide access to resources/modules for import
+
+</details><br/>
 
 # Node.js compatibility and differences
 
-- most of Node.js works
-- notably, no CommonJS support, only ES Modules (no require statements)
-- Node.js plugins are not supported, some built-ins like vm incompatible
-- std/node provides polyfills for Node.js built-ins
+<details>
+  <summary>Running Node.js packages and APIs in Deno</summary><br/>
 
-to work with Node.js submodules that require `require` we build it
+## Interoperability
+
+Deno standard library module std/node provides polyfills for Node.js built-ins
+Most Node.js APIs work "out-of-the-box." Notable exceptions are listed below:
+
+- no support for CommonJS, only ES Modules (no require statements)
+- Node.js plugins are not supported, some built-ins like vm incompatible
+
+<br/>
+
+## Working with Node.js submodules that use CommonJS import syntax
+
+To utilize Node.js submodules that require the `require` API, we build it
 
 ```javascript
 const require = createRequire(import.meta.url);
 const path = require("path"); // etc
 ```
 
+</details><br/>
+
 # File system events
 
-`watcher.ts:`
+<details>
+  <summary>Responding to events emitted by OS (platform-dependent)</summary><br/>
+
+Given file `watcher.ts`
 
 ```typescript
 const watcher = Deno.watchFS(".");
@@ -875,11 +897,19 @@ for await (const event of watcher) {
 ```
 
 `$ deno run --allow-read watcher.ts`
-for windows: [ReadDirectoryChangesW fn, winbase.h API](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-readdirectorychangesw)
+
+For additional info: [Listening to Windows OS Events](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-readdirectorychangesw)
+
+</details><br/>
 
 # Testing in Deno
 
+<details>
+  <summary>Assertion, test-running, and coverage analysis</summary><br/>
+
 Deno standard library has built-in [assertion module](https://deno.land/std@0.106.0/testing/asserts.ts)
+
+## Assert API
 
 ```typescript
 import { assert } from "https://deno.land/std@0.106.0/testing/asserts.ts";
@@ -948,7 +978,9 @@ function assertThrowsAsync(
 ): Promise<Error> {}
 ```
 
-- assertions allow you to overwrite stnadard err message
+<br/><br/>
+
+## Custom error messages
 
 ```typescript
 Deno.test("Test Custom Message", () => {
@@ -956,7 +988,7 @@ Deno.test("Test Custom Message", () => {
 });
 ```
 
-- testing module supports custom assertion functions
+Testing module supports custom assertion functions
 
 ```typescript
 function assertPowerOf(actual: number, expected: number, msg?: string): void {
@@ -972,12 +1004,15 @@ function assertPowerOf(actual: number, expected: number, msg?: string): void {
   }
 }
 
-// utilization
 Deno.test("Test Assert PowerOf", () => {
   assertPowerOf(8, 2);
   assertPowerOf(11, 4);
 });
 ```
+
+<br/><br/>
+
+## Test coverage analysis
 
 - test coverage drawn from underlying V8 engine with `--coverage flag`
 - default excludes files matching regex `test\.(js|mjs|ts|jsx|tsx)` (excludes remote files, can override this with `--exclude, --include`
@@ -1003,6 +1038,8 @@ Deno.test({
   },
 });
 ```
+
+</details><br/>
 
 # Tools and utilities
 
