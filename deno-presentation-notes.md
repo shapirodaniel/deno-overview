@@ -548,9 +548,8 @@ $ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/
 
 Deno's standard modules are <em>not yet stable</em>
 
-- currently version the standard modules differently from CLI to reflect this
-- unlike Deno namespace, use of standard modules do not require --unstable flag, unless standard module itself uses an unstable Deno feature
-- note: this is a deviation from the general pattern requiring --unstable flags!
+- unlike the Deno namespace, the use of standard modules does not require the <code>--unstable</code> flag (unless a standard module itself uses an unstable Deno feature)  
+<em>note: this is a deviation from the general pattern requiring --unstable flags</em>
 </details><br/>
 
 # Query permissions at runtime
@@ -595,7 +594,7 @@ console.log(await Deno.permissions.query(desc1));
 
 - no cookie jar
 - does not follow same-origin policy (Deno user agent has no concept of origins)
-- Deno doesn't need to protet against leaking authenticated data cross origin!
+- Deno doesn't need to protect against leaking authenticated data cross origin!
 - does not implement Origin header, CORS protocol, CORB, Cross-Origin-Resource-Policy header, atomic HTTP redirect handling, or opaquedirect response
 
 <code>CustomEvent, EventTarget, EventListener</code>
