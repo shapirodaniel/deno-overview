@@ -725,8 +725,9 @@ See server framework [Oak](https://github.com/oakserver/oak)
   <summary>Local data persistence</summary><br/>
 
 Deno supports `localStorage` and `sessionStorage`  
-note: `sessionStorage` boundary determined by process duration, `localStorage` persists across process restarts  
-\*\* see [Web Storage APIs in Deno](https://medium.com/deno-the-complete-reference/web-storage-apis-in-deno-8e982ea90085)
+note: `sessionStorage` boundary determined by process duration, `localStorage` persists across process restarts
+
+- see [Web Storage APIs in Deno](https://medium.com/deno-the-complete-reference/web-storage-apis-in-deno-8e982ea90085)
 
 </details><br/>
 
