@@ -37,21 +37,6 @@ Then invoke the script in your <code>Microsoft.PowerShell_profile.ps1</code>
 </details>
 <br/>
 
-# Security
-
-<details>
-  <summary>Intro to Deno sandbox and permissions</summary><br/>
-Deno is secure by default, meaning that we'll need to grant explicit permissions for any privileged actions like web requests
-
-Eg, the following command will fail without the <code>--allow-net</code> flag
-
-`$ deno run https://deno.land/std@0.106.0/examples/curl.ts https://example.com > ./web-response.html`
-
-Launch the fetched markup with live-server to check it out
-
-</details>
-<br/>
-
 # Deno namespace
 
 <details>
@@ -406,15 +391,19 @@ function WebAssembly.validate(bytes: BufferSource): boolean {}
 </details>
 <br/>
 
-# Permissions
+# Security and Permissions
 
 <details>
   <summary>Deno sandbox API</summary><br/>
 
 ## Overview
 
-- Deno is secure by default -- unless you specifically enable it, a program run with Deno has no file, network, or environment access
+- Deno is secure by default: unless you specifically enable it, a program run with Deno has no file, network, or environment access
 - Access is granted to an executing script through cli flags or a runtime permission prompt
+
+The following command will fail without the <code>--allow-net</code> flag
+
+`$ deno run https://deno.land/std@0.106.0/examples/curl.ts https://example.com > ./web-response.html`
 
 <br/>
 
@@ -458,7 +447,7 @@ function WebAssembly.validate(bytes: BufferSource): boolean {}
 
 ### File system access
 
-`$ deno run --allow-read=/usr https://deno.land/std@0.106.0/examples/cat.ts /etc/passwd` will fail without --allow-read flag: prevents unauthorized file reads to sensitive data
+`$ deno run --allow-read=/usr https://deno.land/std@0.106.0/examples/cat.ts /etc/passwd` will fail without <code>--allow-read</code> flag: prevents unauthorized file reads to sensitive data
 <br/><br/>
 
 ### Network access
@@ -548,8 +537,10 @@ $ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/
 
 Deno's standard modules are <em>not yet stable</em>
 
-- unlike the Deno namespace, the use of standard modules does not require the <code>--unstable</code> flag (unless a standard module itself uses an unstable Deno feature)  
+- unlike the Deno namespace, the use of standard modules does not require the <code>--unstable</code> flag (unless a standard module itself uses an unstable Deno feature)
+
 <em>note: this is a deviation from the general pattern requiring --unstable flags</em>
+
 </details><br/>
 
 # Query permissions at runtime
