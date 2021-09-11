@@ -919,7 +919,7 @@ Deno.test("Hello Test", () => {
 });
 ```
 
-supports:
+## Supported assertions
 
 ```typescript
 // assert truthy
@@ -978,7 +978,7 @@ function assertThrowsAsync(
 ): Promise<Error> {}
 ```
 
-<br/><br/>
+<br/>
 
 ## Custom error messages
 
@@ -988,7 +988,7 @@ Deno.test("Test Custom Message", () => {
 });
 ```
 
-Testing module supports custom assertion functions
+## Custom assertions
 
 ```typescript
 function assertPowerOf(actual: number, expected: number, msg?: string): void {
@@ -1010,7 +1010,7 @@ Deno.test("Test Assert PowerOf", () => {
 });
 ```
 
-<br/><br/>
+<br/>
 
 ## Test coverage analysis
 
@@ -1043,13 +1043,17 @@ Deno.test({
 
 # Tools and utilities
 
-## Format
+<details>
+  <summary>Built-in formatting, module bundling, documentation generation, dependency grapher, linter</summary><br/>
+
+## Formatter
 
 `$ deno fmt <specific-file1> ...`
 `deno fmt --check`
 `cat file.ts | deno fmt`
 
 use `// deno-fmt-ignore` comment to skip formatting a block or ignore entire file with `// deno-fmt-ignore-file`
+<br/><br/>
 
 ## Bundler
 
@@ -1079,7 +1083,9 @@ import { bar, foo}  from "./lib.bundle.js
 </script>
 ```
 
-## Documentation generator
+<br/>
+
+## Documentation Generator
 
 `add.ts`
 
@@ -1101,7 +1107,9 @@ export function add(x: number, y: number): number {
 > </br>
 > Adds x and y. @param {number} x @param {number} y @returns {number} Sum of x and y
 
-## Dependency inspector
+<br/>
+
+## Dependency Inspector
 
 `$ deno info [URL]` inspects ES module and its deps
 
@@ -1163,6 +1171,8 @@ https://deno.land/std@0.67.0/http/file_server.ts (10.49KB)
 └── https://deno.land/std@0.67.0/_util/assert.ts *
 ```
 
+<br/>
+
 ## Linter
 
 `$ deno lint <file> --json`
@@ -1170,18 +1180,31 @@ https://deno.land/std@0.67.0/http/file_server.ts (10.49KB)
 
 [deno_lint API](https://lint.deno.land/)
 
+</details><br/>
+
 # Deno and TypeScript
+
+<details>
+  <summary>First-class TypeScript support, config and types import (local and remote)</summary><br/>
 
 ## Overview
 
-Deno treats TypeScript like a first-class language (same way it handles JS, WASM)
-Deno CLI is all that's needed for TypeScript "out-of-the-box"
-TypeScript is compiled to JS via built-in TS compiler + Rust lib [swc](https://rustdoc.swc.rs/swc/)
+- Deno treats TypeScript like a first-class language (same way it handles JS, WASM)
+- Deno CLI is all that's needed for TypeScript "out-of-the-box"
+- TypeScript is compiled to JS via built-in TS compiler + Rust lib [swc](https://rustdoc.swc.rs/swc/)
+
+<br/>
+
+## Skipping type-checking to increase dev velocity
 
 skip typechecks with `--no-check` flag at CLI invocation to avoid cost of compilation
 `$ deno run --allow-net --no-check my_server.ts`
 
-`.d.ts` >> treated as type-definition file with no runnable code
+`.d.ts` is treated as type-definition file with no runnable code
+
+<br/>
+
+## Compiler-supported files
 
 Deno TS compiler supports:
 
@@ -1198,6 +1221,10 @@ Deno TS compiler supports:
 - /plain \*\* attempted
 - /octet-stream \*\* attempted
 
+<br/>
+
+## Type-checking idiosyncracies
+
 Typechecks performed in <code>strict mode</code> by default
 
 \*\* note: type resolution errors cannot be resolved with usual ts pragmas
@@ -1206,6 +1233,8 @@ Typechecks performed in <code>strict mode</code> by default
 // @ts-ignore
 // @ts-expect-error
 ```
+
+<br/>
 
 ## Config
 
@@ -1217,7 +1246,9 @@ To run a config file (not necessary -- out of the box, TypeScript is already con
 
 Deno checks only <code>compilerOptions</code> field from the usual tsc
 
-## Types
+<br/>
+
+## Types usage
 
 inline types usage
 
