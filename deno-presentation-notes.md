@@ -1,8 +1,18 @@
-# deno presentation
+# Deno: A Secure JavaScript and TypeScript Runtime
 
-# config and setup
+<br/>
 
-## VS Code
+# Config and Setup (VS Code)
+
+<details>
+  <summary>Installation, VS Code Integration, CLI Completion</summary><br/>
+
+## Installation
+
+Download instructions can be found [here](https://deno.land/manual@v1.13.2/getting_started/installation)
+<br/><br/>
+
+## Language Server Integration (VS Code)
 
 Install the
 [Deno VS Code language server extension](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
@@ -12,6 +22,7 @@ Initialize Workspace Configuration</code> to enable Deno namespace and url
 imports
 
 Note: it's not recommended to initialize these settings globally
+<br/><br/>
 
 ## PowerShell Deno CLI Completions
 
@@ -23,17 +34,28 @@ powershell_profile.ps1
 
 Then invoke the script in your <code>Microsoft.PowerShell_profile.ps1</code>
 
-# web request and intro to permissions
+</details>
+<br/>
 
+# Security
+
+<details>
+  <summary>Intro to Deno sandbox and permissions</summary><br/>
 Deno is secure by default, meaning that we'll need to grant explicit permissions for any privileged actions -- for instance, a web request
 
 This command will fail without the <code>--allow-net</code> flag
 
 deno run https://deno.land/std@0.106.0/examples/curl.ts https://example.com > ./web-response.html
 
-Launch the fetched markup with live-server to check it out
+Launch the fetched markup with live-server to check it out\
 
-# Deno namespace and built-in APIs, some key ones
+</details>
+<br/>
+
+# Deno namespace
+
+<details>
+  <summary>Key built-in APIs</summary><br/>
 
 ```typescript
 function Deno.chdir(directory: string | URL): void {}
@@ -305,7 +327,13 @@ const overwrite = async () => await Deno.writeTextFile("hello1.txt", "Hello worl
 // requires --allow-write, --allow-read if options.create is false
 ```
 
-## Web Assembly namespace and apis, some key ones
+</details>
+</br>
+
+# Web Assembly namespace
+
+<details>
+<summary>Key built-in APIs</summary><br/>
 
 ```typescript
 function WebAssembly.compile(butes: BufferSource): Promise<Module> {}
@@ -332,54 +360,65 @@ function WebAssembly.validate(bytes: BufferSource): boolean {}
 // returns whether bytes form a valid wasm module true | false
 ```
 
+</details>
+<br/>
+
 # Variables
 
-```typescript
-const Deno.args: string[]
-// returns script args to program
-`deno run --allow-read https://deno.land/std/examples/cat.ts /etc/passwd`
-// Deno.args will contain "/etc/passwd"
+<details>
+  <summary>CLI args, build-related args, environment variables, permissions, process IDs (pid), and std streams</summary><br/>
+  
+`Deno.args`
 
-const Deno.build
-// build related info
-// props:
-target: string
-arch: "x86_64" | "aarch64"
-os: "darwin" | "linux" | "windows"
-vendor: string
-env: string
+- returns script args to program
+- if `$ deno run --allow-read https://deno.land/std/examples/cat.ts /etc/passwd`, Deno.args will contain "/etc/passwd"
 
-const Deno.env: {
-  get(key: string): string | undefined,
-  set(key: string, value: string): void,
-  delete(key: string): void,
-  toObject(): {
-    index: string
-  }
-}
-// requires --allow-env
+`Deno.build`
 
-const Deno.permissions: Permissions
-// permissions management api
+- target: ""
+- arch: "x86_64 | aarch64"
+- os: "darwin | linux | windows"
+- vendor: ""
+- env: ""
 
-const Deno.pid: number
-// current process id of runtime
+`Deno.env`
 
-const Deno.stdin|stdout|stderr
-// handle for stdin, stdout, stderr
-// for stderr, stdout T: Writer & WriterSync & Closer
-// for stdin: Reader & ReaderSync & Closer
-```
+- get(key: string): string | undefined,
+- set(key: string, value: string): void,
+- delete(key: string): void,
+- toObject(): { index: string }
+- requires --allow-env
 
-## Permissions
+`Deno.permissions`
 
-Deno is secure by default -- unless you specifically enable it, a program run with Deno has no:
+- type: Permissions
+- permissions management api
 
-- file
-- network
-- environment access
+`Deno.pid`
 
-Access is granted to an executing script through cli flags or a runtime permission prompt
+- type: Number
+- current process id of runtime
+
+`Deno.stdin | Deno.stdout | Deno.stderr`
+
+- for stderr, stdout T: Writer & WriterSync & Closer
+- for stdin: Reader & ReaderSync & Closer
+</details>
+<br/>
+
+# Permissions
+
+<details>
+  <summary>Deno sandbox API</summary><br/>
+
+## Overview
+
+- Deno is secure by default -- unless you specifically enable it, a program run with Deno has no file, network, or environment access
+- Access is granted to an executing script through cli flags or a runtime permission prompt
+
+<br/>
+
+## Permissions flags
 
 `--allow-env`: allow environment access, ie get/set env vars
 
@@ -413,15 +452,16 @@ Access is granted to an executing script through cli flags or a runtime permissi
 
 `-A, --allow-all`: disable all security
 
-### Permissions use cases
+<br/>
 
-1. File system ccess
+## Permissions use cases
 
-`$ deno run --allow-read=/usr https://deno.land/std@0.106.0/examples/cat.ts /etc/passwd`
+### File system access
 
-- will fail without --allow-read flag, prevents unauthorized file reads to sensitive data
+`$ deno run --allow-read=/usr https://deno.land/std@0.106.0/examples/cat.ts /etc/passwd` will fail without --allow-read flag: prevents unauthorized file reads to sensitive data
+<br/><br/>
 
-2. Network access
+### Network access
 
 ```javascript
 const result = await fetch("https://deno.land/");
@@ -439,19 +479,21 @@ const result = await fetch("https://deno.land/");
 - ipv6 addr, all ports ok
   `$ deno run --allow-net=[2606:4700:4700:1111] fetch.js`
 
-- fetch.js calls that aren't permitted will throw
+<em>note: fetch.js calls that aren't permitted will throw</em>
+<br/><br/>
 
-3. Env vars
+### Environment variables
 
 ```javascript
 Deno.env.set("MY_VAR", "myVar");
 ```
 
-- without --allow-env, will throw
-  `$ deno run --allow-env env.js`
+`$ deno run --allow-env env.js` without --allow-env will throw
+<br/><br/>
 
-4. Caution: privilege escalation
-   Subprocesses aren't restricted by Deno-level permissions
+### Caveats
+
+<strong>A word of caution on privilege escalation</strong>: subprocesses aren't restricted by Deno-level permissions
 
 ```javascript
 const proc = Deno.run({ cmd: ["cat", "/etc/passwd"] });
@@ -461,11 +503,15 @@ const proc = Deno.run({ cmd: ["cat", "/etc/passwd"] });
   `$ deno run --allow-run=cat run.js`
 
 - allow any subprocess to run
-  `$ deno run --allow-run run.js`
+`$ deno run --allow-run run.js`
+</details>
+<br/>
 
-## Load and run wasm
+# Wasm loading and execution
 
-Note: requires `application/wasm` MIME type
+<details>
+<summary>Handling WebAssembly</summary><br/>
+<em>note: requires `application/wasm` MIME type</em>
 
 ```javascript
 const { instance, module} = await WebAssembly.instantiateStreaming(
@@ -475,14 +521,21 @@ const increment = instance.exports.increment as (input: number) => number
 conosle.log(increment(42))
 ```
 
-## Debugging
+</details>
+<br/>
+
+# Debugging
 
 Deno supports V8 Inspector Protocol
 Debug Deno programs using Chrome DevTools or VSCode
-`$ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/http/file_server.ts`
-...Debugger listening on ws://127.0.0.1:9229/ws/...
 
-> > in chrome / edge, open chrome://inspect, click <code>Inspect</code> next to target
+```
+$ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/http/file_server.ts
+...Debugger listening on ws://127.0.0.1:9229/ws/...
+```
+
+- in chrome / edge, open chrome://inspect, click <code>Inspect</code> next to target
+  <br/>
 
 ## Stability and production-readiness
 
@@ -491,6 +544,7 @@ Deno's standard modules are <em>not yet stable</em>
 - currently version the standard modules differently from CLI to reflect this
 - unlike Deno namespace, use of standard modules do not require --unstable flag, unless standard module itself uses an unstable Deno feature
 - note: this is a deviation from the general pattern requiring --unstable flags!
+  <br/><br/>
 
 ## Query permissions at runtime
 
@@ -774,45 +828,45 @@ supports:
 
 ```typescript
 // assert truthy
-function assert(expr: unknown, msg = "");
+function assert(expr: unknown, msg = ""): string {}
 
 // assert equality
-function assertEquals(actual: unknown, expected: unknown, msg?: string): void;
+function assertEquals(actual: unknown, expected: unknown, msg?: string): void {}
 function assertNotEquals(
   actual: unknown,
   expected: unknown,
   msg?: string
-): void;
+): void {}
 function assertStrictEquals(
   actual: unknown,
   expected: unknown,
   msg?: string
-): void;
+): void {}
 
 // assert existence
-function assertExists(actual: unknown, msg?: string): void;
+function assertExists(actual: unknown, msg?: string): void {}
 
 // assert contains
 function assertStringIncludes(
   actual: string,
   expected: string,
   msg?: string
-): void;
+): void {}
 function assertArrayIncludes(
   actual: unknown[],
   expected: unknown[],
   msg?: string
-): void;
+): void {}
 
 // assert regex
-function assertMatch(actual: string, expected: RegExp, msg?: string): void;
-function assertNotMatch(actual: string, expected: RegExp, msg?: string): void;
+function assertMatch(actual: string, expected: RegExp, msg?: string): void {}
+function assertNotMatch(actual: string, expected: RegExp, msg?: string): void {}
 
 // assert object matches a subset of props of object
 function assertObjectMatch(
   actual: Record<PropertyKey, unknown>,
   expected: Record<PropertyKey, unknown>
-): void;
+): void {}
 
 // assert expected error
 function assertThrows(
@@ -820,13 +874,13 @@ function assertThrows(
   ErrorClass?: Constructor,
   msgIncludes = "",
   msg?: string
-): Error;
+): Error {}
 function assertThrowsAsync(
   fn: () => Promise<void>,
   ErrorClass?: Constructor,
   msgIncludes = "",
   msg?: string
-): Promise<Error>;
+): Promise<Error> {}
 ```
 
 - assertions allow you to overwrite stnadard err message
@@ -944,3 +998,155 @@ export function add(x: number, y: number): number {
 > function add(x: number, y: number): number
 > </br>
 > Adds x and y. @param {number} x @param {number} y @returns {number} Sum of x and y
+
+## Dependency inspector
+
+`$ deno info [URL]` inspects ES module and its deps
+
+```
+deno info https://deno.land/std@0.67.0/http/file_server.ts
+Download https://deno.land/std@0.67.0/http/file_server.ts
+...
+local: /home/deno/.cache/deno/deps/https/deno.land/f57792e36f2dbf28b14a75e2372a479c6392780d4712d76698d5031f943c0020
+type: TypeScript
+compiled: /home/deno/.cache/deno/gen/https/deno.land/f57792e36f2dbf28b14a75e2372a479c6392780d4712d76698d5031f943c0020.js
+deps: 23 unique (total 139.89KB)
+https://deno.land/std@0.67.0/http/file_server.ts (10.49KB)
+├─┬ https://deno.land/std@0.67.0/path/mod.ts (717B)
+│ ├── https://deno.land/std@0.67.0/path/_constants.ts (2.35KB)
+│ ├─┬ https://deno.land/std@0.67.0/path/win32.ts (27.36KB)
+│ │ ├── https://deno.land/std@0.67.0/path/_interface.ts (657B)
+│ │ ├── https://deno.land/std@0.67.0/path/_constants.ts *
+│ │ ├─┬ https://deno.land/std@0.67.0/path/_util.ts (3.3KB)
+│ │ │ ├── https://deno.land/std@0.67.0/path/_interface.ts *
+│ │ │ └── https://deno.land/std@0.67.0/path/_constants.ts *
+│ │ └── https://deno.land/std@0.67.0/_util/assert.ts (405B)
+│ ├─┬ https://deno.land/std@0.67.0/path/posix.ts (12.67KB)
+│ │ ├── https://deno.land/std@0.67.0/path/_interface.ts *
+│ │ ├── https://deno.land/std@0.67.0/path/_constants.ts *
+│ │ └── https://deno.land/std@0.67.0/path/_util.ts *
+│ ├─┬ https://deno.land/std@0.67.0/path/common.ts (1.14KB)
+│ │ └─┬ https://deno.land/std@0.67.0/path/separator.ts (264B)
+│ │   └── https://deno.land/std@0.67.0/path/_constants.ts *
+│ ├── https://deno.land/std@0.67.0/path/separator.ts *
+│ ├── https://deno.land/std@0.67.0/path/_interface.ts *
+│ └─┬ https://deno.land/std@0.67.0/path/glob.ts (8.12KB)
+│   ├── https://deno.land/std@0.67.0/path/_constants.ts *
+│   ├── https://deno.land/std@0.67.0/path/mod.ts *
+│   └── https://deno.land/std@0.67.0/path/separator.ts *
+├─┬ https://deno.land/std@0.67.0/http/server.ts (10.23KB)
+│ ├── https://deno.land/std@0.67.0/encoding/utf8.ts (433B)
+│ ├─┬ https://deno.land/std@0.67.0/io/bufio.ts (21.15KB)
+│ │ ├── https://deno.land/std@0.67.0/bytes/mod.ts (4.34KB)
+│ │ └── https://deno.land/std@0.67.0/_util/assert.ts *
+│ ├── https://deno.land/std@0.67.0/_util/assert.ts *
+│ ├─┬ https://deno.land/std@0.67.0/async/mod.ts (202B)
+│ │ ├── https://deno.land/std@0.67.0/async/deferred.ts (1.03KB)
+│ │ ├── https://deno.land/std@0.67.0/async/delay.ts (279B)
+│ │ ├─┬ https://deno.land/std@0.67.0/async/mux_async_iterator.ts (1.98KB)
+│ │ │ └── https://deno.land/std@0.67.0/async/deferred.ts *
+│ │ └── https://deno.land/std@0.67.0/async/pool.ts (1.58KB)
+│ └─┬ https://deno.land/std@0.67.0/http/_io.ts (11.25KB)
+│   ├── https://deno.land/std@0.67.0/io/bufio.ts *
+│   ├─┬ https://deno.land/std@0.67.0/textproto/mod.ts (4.52KB)
+│   │ ├── https://deno.land/std@0.67.0/io/bufio.ts *
+│   │ ├── https://deno.land/std@0.67.0/bytes/mod.ts *
+│   │ └── https://deno.land/std@0.67.0/encoding/utf8.ts *
+│   ├── https://deno.land/std@0.67.0/_util/assert.ts *
+│   ├── https://deno.land/std@0.67.0/encoding/utf8.ts *
+│   ├── https://deno.land/std@0.67.0/http/server.ts *
+│   └── https://deno.land/std@0.67.0/http/http_status.ts (5.93KB)
+├─┬ https://deno.land/std@0.67.0/flags/mod.ts (9.54KB)
+│ └── https://deno.land/std@0.67.0/_util/assert.ts *
+└── https://deno.land/std@0.67.0/_util/assert.ts *
+```
+
+## Linter
+
+`$ deno lint <file> --json`
+`$ cat file.ts | deno lint -`
+
+[deno_lint API](https://lint.deno.land/)
+
+# Deno and TypeScript
+
+## Overview
+
+Deno treats TypeScript like a first-class language (same way it handles JS, WASM)
+Deno CLI is all that's needed for TypeScript "out-of-the-box"
+TypeScript is compiled to JS via built-in TS compiler + Rust lib [swc](https://rustdoc.swc.rs/swc/)
+
+skip typechecks with `--no-check` flag at CLI invocation to avoid cost of compilation
+`$ deno run --allow-net --no-check my_server.ts`
+
+`.d.ts` >> treated as type-definition file with no runnable code
+
+Deno TS compiler supports:
+
+- /typescript (application, text)
+- /vnd.dlna.mpeg-tts
+- /mp2t
+- /x-typescript
+- /javascript (application, text)
+- /ecmascript (application, text)
+- /x-javascript
+- /node
+- /jsx
+- /tsx
+- /plain \*\* attempted
+- /octet-stream \*\* attempted
+
+Typechecks performed in <code>strict mode</code> by default
+
+\*\* note: type resolution errors cannot be resolved with usual ts pragmas
+
+```typescript
+// @ts-ignore
+// @ts-expect-error
+```
+
+## Config
+
+To run a config file (not necessary -- out of the box, TypeScript is already configured for usual use cases)
+
+- config may be incompatible with downstream consumers of this module, not advised!
+- if config necessary, must be required to all consumers if parent module is distributed
+  `$ deno run --config ./tsconfig.json main.ts`
+
+Deno checks only <code>compilerOptions</code> field from the usual tsc
+
+## Types
+
+inline types usage
+
+```typescript
+// @deno-types="./coolLib.d.ts"
+import * as coolLib from "./coolLib.js";
+// now, typechecking will use the deno-types rather than coolLib.js
+```
+
+include other files
+
+```typescript
+/// <reference types="./coolLib.d.ts" />
+// javascript goes here...
+```
+
+use X-TypeScript-Types header to resolve and typecheck remote modules
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/javascript; charset=UTF-8
+Content-Length: 648
+X-TypeScript-Types: ./coolLib.d.ts
+```
+
+Use [Skypack.dev](https://docs.skypack.dev/skypack-cdn/code/deno) CDN to resolve types in remote module imports
+
+- important! append `?dts` to URL
+
+```typescript
+import React from "https://cdn.skypack.dev/react?dts";
+```
+
+** Note: Deno supports a particular version of TypeScript bundled with the Deno release **
