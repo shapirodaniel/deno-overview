@@ -837,11 +837,12 @@ always cache remote deps!
 
 <details>
   <summary>Accessing modules in private repositories</summary><br/>
-You may want to import submodules from private repositories  
-Deno provides an environment variable to handle authentication via token:  
-  
+You may want to import submodules from private repositories
+
+Deno provides an environment variable to handle authentication via token:
+
 `$ DENO_AUTH_TOKENS=a1b2c3@deno.land;f1e2g3h4@example.com:8080`
-  
+
 Deno will set Authorization header of request to value of `Bearer {token}`  
 This allows the remote server to recognize authorized requests tied to specific, authenticated users and provide access to resources/modules for import
 
