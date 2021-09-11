@@ -912,6 +912,8 @@ Deno.test("Hello Test", () => {
 });
 ```
 
+<br/>
+
 ## Supported assertions
 
 ```typescript
@@ -980,6 +982,8 @@ Deno.test("Test Custom Message", () => {
   assertEquals(1, 2, "Values don't match");
 });
 ```
+
+<br/>
 
 ## Custom assertions
 
