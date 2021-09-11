@@ -1063,8 +1063,11 @@ use `// deno-fmt-ignore` comment to skip formatting a block or ignore entire fil
 
 - if out file omitted, bundle sent to <code>stdout</code>
 
-run bundle like a module >> output is self-contained ES module where exports from main module supplied via CLI will be available
-`$ deno run my.bundle.js`
+You can run bundles like a module
+
+- Output is a self-contained ES module, where exports from the main module (supplied via CLI) will be available
+
+Given `$ deno run my.bundle.js`
 
 ```javascript
 // target to be bundled as lib.bundle.js
