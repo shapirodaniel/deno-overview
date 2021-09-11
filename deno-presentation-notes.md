@@ -18,8 +18,7 @@ Install the
 [Deno VS Code language server extension](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
 
 <code>ctrl + shift + p</code> to launch search, navigate to <code>Deno:
-Initialize Workspace Configuration</code> to enable Deno namespace and url
-imports
+Initialize Workspace Configuration</code> to enable Deno namespace and url imports
 
 Note: it's not recommended to initialize these settings globally
 <br/><br/>
@@ -37,7 +36,7 @@ Then invoke the script in your <code>Microsoft.PowerShell_profile.ps1</code>
 </details>
 <br/>
 
-# Deno namespace
+# Deno Namespace
 
 <details>
   <summary>Key built-in APIs</summary><br/>
@@ -315,7 +314,7 @@ const overwrite = async () => await Deno.writeTextFile("hello1.txt", "Hello worl
 </details>
 </br>
 
-# Web Assembly namespace
+# Web Assembly Namespace
 
 <details>
 <summary>Key built-in APIs</summary><br/>
@@ -407,7 +406,7 @@ The following command will fail without the <code>--allow-net</code> flag
 
 <br/>
 
-## Permissions flags
+## Permissions Flags
 
 `--allow-env`: allow environment access, ie get/set env vars
 
@@ -443,14 +442,14 @@ The following command will fail without the <code>--allow-net</code> flag
 
 <br/>
 
-## Permissions use cases
+## Permissions Use Cases
 
-### File system access
+### File System Access
 
 `$ deno run --allow-read=/usr https://deno.land/std@0.106.0/examples/cat.ts /etc/passwd` will fail without <code>--allow-read</code> flag: prevents unauthorized file reads to sensitive data
 <br/><br/>
 
-### Network access
+### Network Access
 
 ```javascript
 const result = await fetch("https://deno.land/");
@@ -471,7 +470,7 @@ const result = await fetch("https://deno.land/");
 <em>note: fetch.js calls that aren't permitted will throw</em>
 <br/><br/>
 
-### Environment variables
+### Environment Variables
 
 ```javascript
 Deno.env.set("MY_VAR", "myVar");
@@ -495,7 +494,7 @@ const proc = Deno.run({ cmd: ["cat", "/etc/passwd"] });
 </details>
 <br/>
 
-# Wasm loading and execution
+# WASM: Loading and Execution
 
 <details>
 <summary>Handling WebAssembly</summary><br/>
@@ -530,7 +529,7 @@ $ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/
 
 </details><br/>
 
-# Stability and production-readiness
+# Stability and Production-Readiness
 
 <details>
 <summary>Overview of state of standard modules</summary><br/>
@@ -543,7 +542,7 @@ Deno's standard modules are <em>not yet stable</em>
 
 </details><br/>
 
-# Query permissions at runtime
+# Query Permissions at Runtime
 
 <details>
 <summary>JIT permissions handling</summary><br/>
@@ -719,7 +718,7 @@ See server framework [Oak](https://github.com/oakserver/oak)
 
 </details><br/>
 
-# Local/SessionStorage
+# LocalStorage and SessionStorage
 
 <details>
   <summary>Local data persistence</summary><br/>
@@ -792,7 +791,7 @@ options: {
 <details>
   <summary>Best practices for import-export logic</summary><br/>
 
-## Emulate node_modules through import, re-export
+## Emulate <em>node_modules</em> Through Import, Re-Export
 
 Specify version and import, re-export external libs in central `deps.ts` file: this is akin to `package.json` functionality
 
@@ -810,12 +809,12 @@ import { assertEQuals, runTests, test } from "./deps.ts";
 
 <br/>
 
-## Hold deps in source control
+## Hold Deps in Source Control
 
 Check $DENO_DIR into source control to avoid brittle servers and outages preventing access to deps
 <br/><br/>
 
-## Cache lock files to monitor deps
+## Cache Lock Files to Monitor Deps
 
 Cache and generate lock files to monitor subresource integrity and guarantee stable versions across project lifetime
 
@@ -833,7 +832,7 @@ always cache remote deps!
 
 </details><br/>
 
-# Private modules and tokens
+# Accessing Private Modules Via Token
 
 <details>
   <summary>Accessing modules in private repositories</summary><br/>
@@ -848,7 +847,7 @@ This allows the remote server to recognize authorized requests tied to specific,
 
 </details><br/>
 
-# Node.js compatibility and differences
+# Node.js Compatibility
 
 <details>
   <summary>Running Node.js packages and APIs in Deno</summary><br/>
@@ -863,7 +862,7 @@ Most Node.js APIs work "out-of-the-box." Notable exceptions are listed below:
 
 <br/>
 
-## Working with Node.js submodules that use CommonJS import syntax
+## Working with Node.js Submodules That Use CommonJS <code>Require</code>
 
 To utilize Node.js submodules that require the `require` API, we build it
 
@@ -874,7 +873,7 @@ const path = require("path"); // etc
 
 </details><br/>
 
-# File system events
+# File System Events
 
 <details>
   <summary>Responding to events emitted by OS (platform-dependent)</summary><br/>
@@ -914,7 +913,7 @@ Deno.test("Hello Test", () => {
 
 <br/>
 
-## Supported assertions
+## Supported Assertions
 
 ```typescript
 // assert truthy
@@ -975,7 +974,7 @@ function assertThrowsAsync(
 
 <br/>
 
-## Custom error messages
+## Custom Error Messages
 
 ```typescript
 Deno.test("Test Custom Message", () => {
@@ -985,7 +984,7 @@ Deno.test("Test Custom Message", () => {
 
 <br/>
 
-## Custom assertions
+## Custom Assertions
 
 ```typescript
 function assertPowerOf(actual: number, expected: number, msg?: string): void {
@@ -1009,7 +1008,7 @@ Deno.test("Test Assert PowerOf", () => {
 
 <br/>
 
-## Test coverage analysis
+## Test Coverage Analysis
 
 - test coverage drawn from underlying V8 engine with `--coverage` flag
 - default excludes files matching regex `test\.(js|mjs|ts|jsx|tsx)`
@@ -1043,7 +1042,7 @@ Deno.test({
 
 </details><br/>
 
-# Tools and utilities
+# Tools and Utilities
 
 <details>
   <summary>Built-in formatting, module bundling, documentation generation, dependency grapher, linter</summary><br/>
@@ -1200,9 +1199,9 @@ https://deno.land/std@0.67.0/http/file_server.ts (10.49KB)
 
 <br/>
 
-## Skipping type-checking to increase dev velocity
+## Skipping Type-checking
 
-skip typechecks with `--no-check` flag at CLI invocation to avoid cost of compilation
+Skip typechecks with `--no-check` flag at CLI invocation to avoid cost of compilation
 
 `$ deno run --allow-net --no-check my_server.ts`
 
@@ -1210,7 +1209,7 @@ skip typechecks with `--no-check` flag at CLI invocation to avoid cost of compil
 
 <br/>
 
-## Compiler-supported files
+## Compiler-Supported Filetypes
 
 Deno TS compiler supports:
 
@@ -1229,7 +1228,7 @@ Deno TS compiler supports:
 
 <br/>
 
-## Type-checking idiosyncracies
+## Type-checking Idiosyncracies
 
 Typechecks performed in <code>strict mode</code> by default  
 note: type resolution errors cannot be resolved with usual ts pragmas
@@ -1241,7 +1240,7 @@ note: type resolution errors cannot be resolved with usual ts pragmas
 
 <br/>
 
-## Config
+## TS Config Usage
 
 To run a config file (not necessary -- out of the box, TypeScript is already configured for usual use cases)
 
@@ -1254,7 +1253,7 @@ Deno checks only the <code>compilerOptions</code> field from the usual <code>tsc
 
 <br/>
 
-## Types usage
+## Types Usage
 
 Inline types usage
 
