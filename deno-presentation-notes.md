@@ -1231,9 +1231,8 @@ Deno TS compiler supports:
 
 ## Type-checking idiosyncracies
 
-Typechecks performed in <code>strict mode</code> by default
-
-\*\* note: type resolution errors cannot be resolved with usual ts pragmas
+Typechecks performed in <code>strict mode</code> by default  
+note: type resolution errors cannot be resolved with usual ts pragmas
 
 ```typescript
 // @ts-ignore
@@ -1246,11 +1245,12 @@ Typechecks performed in <code>strict mode</code> by default
 
 To run a config file (not necessary -- out of the box, TypeScript is already configured for usual use cases)
 
+`$ deno run --config ./tsconfig.json main.ts`
+
 - config may be incompatible with downstream consumers of this module, not advised!
 - if config necessary, must be required to all consumers if parent module is distributed
-  `$ deno run --config ./tsconfig.json main.ts`
 
-Deno checks only <code>compilerOptions</code> field from the usual tsc
+Deno checks only the <code>compilerOptions</code> field from the usual <code>tsc</code>
 
 <br/>
 
