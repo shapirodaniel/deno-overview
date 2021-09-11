@@ -1203,9 +1203,10 @@ https://deno.land/std@0.67.0/http/file_server.ts (10.49KB)
 ## Skipping type-checking to increase dev velocity
 
 skip typechecks with `--no-check` flag at CLI invocation to avoid cost of compilation
+
 `$ deno run --allow-net --no-check my_server.ts`
 
-`.d.ts` is treated as type-definition file with no runnable code
+<strong>note:</strong> <code>.d.ts</code> is treated as type-definition file with no runnable code
 
 <br/>
 
