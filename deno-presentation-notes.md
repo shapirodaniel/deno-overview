@@ -746,9 +746,9 @@ new Worker(new URL("./worker.js", import.meta.url).href, { type: "module" });
 
 <br/>
 
-Workers require --allow-read for local modules, --allow-net for remote modules
+Workers require <code>--allow-read</code> for local modules, <code>--allow-net</code> for remote modules
 
-`unstable`: pass <code>{ deno: { namespace: true }}</code> in options to use Deno inside worker
+`unstable`: pass <code>{ deno: { namespace: true } }</code> in options to use Deno inside worker
 
 ```typescript
 const worker = new Worker(new URL("./worker.js", import.meta.url).href, {
