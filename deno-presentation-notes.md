@@ -41,13 +41,13 @@ Then invoke the script in your <code>Microsoft.PowerShell_profile.ps1</code>
 
 <details>
   <summary>Intro to Deno sandbox and permissions</summary><br/>
-Deno is secure by default, meaning that we'll need to grant explicit permissions for any privileged actions -- for instance, a web request
+Deno is secure by default, meaning that we'll need to grant explicit permissions for any privileged actions like web requests
 
-This command will fail without the <code>--allow-net</code> flag
+Eg, the following command will fail without the <code>--allow-net</code> flag
 
-deno run https://deno.land/std@0.106.0/examples/curl.ts https://example.com > ./web-response.html
+`$ deno run https://deno.land/std@0.106.0/examples/curl.ts https://example.com > ./web-response.html`
 
-Launch the fetched markup with live-server to check it out\
+Launch the fetched markup with live-server to check it out
 
 </details>
 <br/>
@@ -371,7 +371,7 @@ function WebAssembly.validate(bytes: BufferSource): boolean {}
 `Deno.args`
 
 - returns script args to program
-- if `$ deno run --allow-read https://deno.land/std/examples/cat.ts /etc/passwd`, Deno.args will contain "/etc/passwd"
+- `$ deno run --allow-read https://deno.land/std/examples/cat.ts /etc/passwd`; <em>Deno.args</em> contains <code>"/etc/passwd"</code>
 
 `Deno.build`
 
@@ -401,8 +401,8 @@ function WebAssembly.validate(bytes: BufferSource): boolean {}
 
 `Deno.stdin | Deno.stdout | Deno.stderr`
 
-- for stderr, stdout T: Writer & WriterSync & Closer
-- for stdin: Reader & ReaderSync & Closer
+- for stderr, stdout, type: Writer & WriterSync & Closer
+- for stdin, type: Reader & ReaderSync & Closer
 </details>
 <br/>
 
@@ -501,7 +501,6 @@ const proc = Deno.run({ cmd: ["cat", "/etc/passwd"] });
 
 - only spawn cat subprocess
   `$ deno run --allow-run=cat run.js`
-
 - allow any subprocess to run
 `$ deno run --allow-run run.js`
 </details>
@@ -536,7 +535,9 @@ $ deno run --inspect-brk --allow-read --allow-net https://deno.land/std@0.106.0/
 ...Debugger listening on ws://127.0.0.1:9229/ws/...
 ```
 
-- in chrome / edge, open chrome://inspect, click <code>Inspect</code> next to target
+- edge: <code>edge://inspect/#devices</code>
+- chrome: <code>chrome://inspect</code>
+- click <code>Inspect</code> next to target
 
 </details><br/>
 
