@@ -36,10 +36,10 @@ Launch the fetched markup with live-server to check it out
 # Deno namespace and built-in APIs, some key ones
 
 ```typescript
-function Deno.chdir(directory: string | URL): void
+function Deno.chdir(directory: string | URL): void {}
 Deno.chdir("/home/userA") // equivalent to ls | Set-Location
 
-function Deno.chmod(path: string | URL, mode: number): Promise<void>
+function Deno.chmod(path: string | URL, mode: number): Promise<void> {}
 // change permission of specific file/dir of specified path
 await Deno.chmod("/path/to/file", 0o666) // where second arg is structured
 /*
@@ -49,30 +49,30 @@ await Deno.chmod("/path/to/file", 0o666) // where second arg is structured
   note: throws on Windows, requires --allow-write permission
 */
 
-function Deno.close(rid: number): void
+function Deno.close(rid: number): void {}
 // close a given resource ID to avoid memory leaks
 const file = await Deno.open("my_file.txt")
 // do work with file object
 Deno.close(file.rid)
 
-function Deno.create(path: string | URL): Promise<File>
+function Deno.create(path: string | URL): Promise<File> {}
 // create a file or truncate an existing file and resolve to an instance of Deno.File
 const file = await Deno.create("/foo/bar.txt")
 // requires --allow-read, --allow-write privileges
 
-function Deno.exit(code?: number): never
-// TypeScript never: function will not return to its end point or will always throw an exception
+function Deno.exit(code?: number): never {}
+// TypeScript never: function will not return to its end point or will always throw an exception {}
 // Exit the Deno process with optional exit code; no code specified == 0
 Deno.exit(1)
 
-function Deno.fdatasync(rid: number): Promise<void>
+function Deno.fdatasync(rid: number): Promise<void> {}
 // flush pending data ops of given file stream to disk
 const file = await Deno.open("my_file.txt", { read: true, write: true, create: true });
 await Deno.write(file.rid, new TextEncoder().encode("Hello World"));
 await Deno.fdatasync(file.rid);
 console.log(new TextDecoder().decode(await Deno.readFile("my_file.txt"))); // Hello World
 
-function Deno.inspect(value: unknown, options?: InspectOptions): string
+function Deno.inspect(value: unknown, options?: InspectOptions): string {}
 // convert input into string formatted like console.log() output
 const obj = {
   a: 10,
@@ -95,10 +95,10 @@ console.log(inStringFormat);  // prints "x=10, y=hello"
 // specify depth to output nested types
 Deno.inspect({a: {b: {c: {d: 'hello'}}}}, {depth: 2}); // { a: { b: [Object] } }
 
-function Deno.memoryUsage(): MemoryUsage
+function Deno.memoryUsage(): MemoryUsage {}
 // returns an object describing memory usage of Deno process measured in bytes
 
-function Deno.mkdir(path: string | URL, options?: MkdirOptions): Promise<void>
+function Deno.mkdir(path: string | URL, options?: MkdirOptions): Promise<void> {}
 // create a new dir with specified path
 await Deno.mkdir("new_dir");
 await Deno.mkdir("nested/directories", { recursive: true }); // nested dirs
@@ -106,7 +106,7 @@ await Deno.mkdir("restricted_access_dir", { mode: 0o700 }); // chmod specificati
 // default throws if dir already exists
 // requires --allow-write
 
-function Deno.open(path: string | URL, options?: OpenOptions): Promise<File>
+function Deno.open(path: string | URL, options?: OpenOptions): Promise<File> {}
 // open and resolve to an instance of Deno.File
 // will generate new file if create, createNew open options
 // caller should close when through with file objec to prevent memory leaks
@@ -115,14 +115,14 @@ const file = await Deno.open("/foo/bar.txt", { read: true, write: true });
 Deno.close(file.rid);
 // requires --allow-read and/or --allow-write depending on options
 
-function Deno.readDir(path: string | URL): AsyncIterable<DirEntry>
+function Deno.readDir(path: string | URL): AsyncIterable<DirEntry> {}
 // reads directory by path and returns async iterable of Deno.DirEntry
 for await (const dirEntry of Deno.readDir("/")) {
   console.log(dirEntry.name);
 }
 // throws if path not directory, requires --allow-read
 
-function Deno.readFile(path: string | URL, options?: ReadFileOptions): Promise<Uint8Array>
+function Deno.readFile(path: string | URL, options?: ReadFileOptions): Promise<Uint8Array> {}
 // reads and resolves to entire contents of file as byte array
 // use TextDecoder to transform bytes to string if required
 // reading directory == return empty data array
@@ -131,14 +131,14 @@ const data = await Deno.readFile("hello.txt");
 console.log(decoder.decode(data));
 // requires --allow-read
 
-function Deno.readTextFile(path: string | URL, options?: ReadFileOptions): Promise<string>
+function Deno.readTextFile(path: string | URL, options?: ReadFileOptions): Promise<string> {}
 // async read and return entire contents of file as utf8 encoded string
 // read dir throws
 const data = await Deno.readTextFile("hello.txt");
 console.log(data);
 // requires --allow-read
 
-function Deno.realPath(path: string | URL): Promise<string>
+function Deno.realPath(path: string | URL): Promise<string> {}
 // resolves to absolute normalized path with symbolic links resolved
 await Deno.symlink("file.txt", "symlink_file.txt")
 const realPath = await Deno.realPath("./file.txt")
@@ -147,13 +147,13 @@ console.log(realPath === realSymLinkPath) // true
 console.log(realPath) // "/home/alice/file.txt"
 // requires --allow-read for target path and CWD if target path relative
 
-function Deno.remove(path: string | URL, options?: RemoveOptions): Promise<void>
+function Deno.remove(path: string | URL, options?: RemoveOptions): Promise<void> {}
 // remove named file or dir
 await Deno.remove("/path/to/dir-or-file", { recursive: true })
 // throws if permission denied, path not found, path is non-empty dir and recursive isn't set to true
 // requires --allow-write
 
-function Deno.rename(oldpath: string | URL, newpath: string | URL): Promise<void>
+function Deno.rename(oldpath: string | URL, newpath: string | URL): Promise<void> {}
 // rename (move) oldpath to newpath where either file or dir
 // **if newpath already exists and isn't a dir, rename() replaces it
 const renameIt = async () => await Deno.rename(oldpath, newPath)
@@ -161,13 +161,13 @@ renameIt() // this is for syntax highlighting convenience only -- md doesn't rec
 // throws differently on different platforms
 // requires --allow-read, --allow-write
 
-function Deno.resources(): ResourceMap
+function Deno.resources(): ResourceMap {}
 // returns map of open rid along with string rep
 // an internal API, resource rep is 'any' type, can change anytime
 const resources = Deno.resources()
 console.log(resources) // { 0: "stdin", 1: "stdout", 2: "stderr" }
 
-function Deno.run(opt: T): Process<T>
+function Deno.run(opt: T): Process<T> {}
 // spawns new subprocess -- RunOptions must contain minimally opt.cmd, array of program args, first is binary
 const p = Deno.run({
   cmd: ["echo", "hello"],
@@ -185,7 +185,7 @@ const p = Deno.run({
 // details of spawned process are returned
 // requires --allow-run
 
-function Deno.seek(rid: number, offset: number, whence: SeekMode): Promise<number>
+function Deno.seek(rid: number, offset: number, whence: SeekMode): Promise<number> {}
 // seek a rid to given offest under mode given by whence
 // call resolves to new position within the resource (bytes from start)
 const file = await Deno.open('hello.txt', { read: true, write: true, truncate: true, create: true })
@@ -205,7 +205,7 @@ console.log(await Deno.seek(file.rid, 6, Deno.SeekMode.Start)) // "6"
 console.log(await Deno.seek(file.rid, 2, Deno.SeekMode.Current)) // "8"
 console.log(await Deno.seek(file.rid, -2, Deno.SeekMode.End)) // "9"
 
-function Deno.serveHttp(conn: Conn): HttpConn
+function Deno.serveHttp(conn: Conn): HttpConn {}
 // services HTTP requests given TCP/TLS socket
 const conn = await Deno.connect({ port: 80, hostname: "127.0.0.1" })
 const httpConn = Deno.serveHttp(conn)
@@ -215,24 +215,24 @@ if (e) {
 }
 // if httpConn.nextRequest() encounters an error or returns null, underlying HttpConn resource is closed automatically
 
-function Deno.shutdown(rid: number): Promise<void>
+function Deno.shutdown(rid: number): Promise<void> {}
 // shutdown socket send ops
 // matches behavior of POSIX shutdown(3)
 
-function Deno.stat(path: string | URL): Promise<FileInfo>
+function Deno.stat(path: string | URL): Promise<FileInfo> {}
 // resolves to a Deno.FileInfo for specified path -- always follows symlinks
 import { assert } from "https://deno.land/std/testing/asserts.ts"
 const fileInfo = await Deno.stat("hello.txt")
 assert(fileInfo.isFile)
 // requires --allow-read
 
-function Deno.symlink(oldpath: string | URL, newpath: string | URL, options?: SymlinkOptions): Promise<void>
+function Deno.symlink(oldpath: string | URL, newpath: string | URL, options?: SymlinkOptions): Promise<void> {}
 // create newpath as a symbolic link to oldpath
 // options.type param can be set to file | dir, arg only available on Windows (ignored on Mac/Linux)
 const linkem = async () => await Deno.symlink("old/name", "new/name")
 // requires --allow-write
 
-function Deno.test(t: TestDefinition): void
+function Deno.test(t: TestDefinition): void {}
 // register a test run with CLI deno test containing module that looks like test module
 // can be async as necessary
 import { assert, fail, assertEquals } from "https://deno.land/std/testing/asserts.ts"
@@ -261,7 +261,7 @@ Deno.test({
   }
 })
 
-function Deno.truncate(name: string, len?: number): Promise<void>
+function Deno.truncate(name: string, len?: number): Promise<void> {}
 // trucates/extends specified file to reach len
 // if no len, entire file contents are truncated
 const trunc = async () => await Deno.truncate("my_file.txt")
@@ -274,7 +274,7 @@ const data = await Deno.readFile(file)
 console.log(new TextDecoder().decode(data))
 // requires --allow-write
 
-function Deno.watchFs(paths: string | string[], options?: { recursive: boolean }): FsWatcher
+function Deno.watchFs(paths: string | string[], options?: { recursive: boolean }): FsWatcher {}
 // watch for fs events against one or more paths (files or dirs)
 // paths must already exist
 // user action like touch test.file can generate multiple fs events
@@ -289,7 +289,7 @@ for await (const event of watcher) {
 // requires --allow-read
 // call watcher.close() to stop watching
 
-function Deno.writeFile(path: string | URL, data: Uint8Array, options?: WriteFileOptions): Promise<void>
+function Deno.writeFile(path: string | URL, data: Uint8Array, options?: WriteFileOptions): Promise<void> {}
 // write data to given path, default create else ovewrite file
 const encoder = new TextEncoder()
 const data = encoder.encode("Hello world\n")
@@ -299,7 +299,7 @@ await Deno.writeFile("hello3.txt", data, { mode: 0o777 }) // highest permissions
 await Deno.writeFile("hello4.txt", data, { append: true }) // add data to end of file
 // requires --allow-write, --allow-read if options.create is false
 
-function Deno.writeTextFile(path: string | URL, data: string, options?: WriteFileOptions): Promise<void>
+function Deno.writeTextFile(path: string | URL, data: string, options?: WriteFileOptions): Promise<void> {}
 // async write string data to given path, default create new file if needed else overwrite
 const overwrite = async () => await Deno.writeTextFile("hello1.txt", "Hello world\n")
 // requires --allow-write, --allow-read if options.create is false
@@ -308,26 +308,26 @@ const overwrite = async () => await Deno.writeTextFile("hello1.txt", "Hello worl
 ## Web Assembly namespace and apis, some key ones
 
 ```typescript
-function WebAssembly.compile(butes: BufferSource): Promise<Module>
+function WebAssembly.compile(butes: BufferSource): Promise<Module> {}
 // compiles WebAssembly binary into a WebAssembly.Module object
 // useful to compile module before it can be instantiated
 // otherwise use WebAssembly.instantiate()
 
-function WebAssembly.compileStreaming(source: Response | Promise<Response>): Promise<Module>
+function WebAssembly.compileStreaming(source: Response | Promise<Response>): Promise<Module> {}
 // compiles a WebAssembly.Module directly from streamed underlying source
 // useful if necessary to compile a module before it can be instantiated (see above note)
 
-function WebAssembly.instantiate(bytes: BufferSource, importObject?: Imports): Promise<WebAssemblyInstantiateSource>
+function WebAssembly.instantiate(bytes: BufferSource, importObject?: Imports): Promise<WebAssemblyInstantiateSource> {}
 // compile and instantiate WebAssembly code
 // overload takes binary code in form of typed array | ArrayBuffer
 // performs compilation and instantiation in one step
 // returned Promise resolves to compiled WebAssembly.Module and WebAssembly.Instance
 
-function WebAssembly.instantiateStreaming(response: Response | PromiseLike<Response>, importObject?: Imports): Promise<WebAssemblyInstantiatedSource>
+function WebAssembly.instantiateStreaming(response: Response | PromiseLike<Response>, importObject?: Imports): Promise<WebAssemblyInstantiatedSource> {}
 // compiles and instantiates a WebAssembly module directly from streamed underlying source
 // most efficient / optimized way to load wasm
 
-function WebAssembly.validate(bytes: BufferSource): boolean
+function WebAssembly.validate(bytes: BufferSource): boolean {}
 // validates given typed array of WebAssembly binary
 // returns whether bytes form a valid wasm module true | false
 ```
@@ -742,3 +742,205 @@ to work with Node.js submodules that require `require` we build it
 const require = createRequire(import.meta.url);
 const path = require("path"); // etc
 ```
+
+# File system events
+
+`watcher.ts:`
+
+```typescript
+const watcher = Deno.watchFS(".");
+for await (const event of watcher) {
+  console.log(">>>> event", event);
+  // Ex, { kind: "create", paths: ["/home/alice/deno/foo.txt"]}
+}
+```
+
+`$ deno run --allow-read watcher.ts`
+for windows: [ReadDirectoryChangesW fn, winbase.h API](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-readdirectorychangesw)
+
+# Testing in Deno
+
+Deno standard library has built-in [assertion module](https://deno.land/std@0.106.0/testing/asserts.ts)
+
+```typescript
+import { assert } from "https://deno.land/std@0.106.0/testing/asserts.ts";
+
+Deno.test("Hello Test", () => {
+  assert("Hello");
+});
+```
+
+supports:
+
+```typescript
+// assert truthy
+function assert(expr: unknown, msg = "");
+
+// assert equality
+function assertEquals(actual: unknown, expected: unknown, msg?: string): void;
+function assertNotEquals(
+  actual: unknown,
+  expected: unknown,
+  msg?: string
+): void;
+function assertStrictEquals(
+  actual: unknown,
+  expected: unknown,
+  msg?: string
+): void;
+
+// assert existence
+function assertExists(actual: unknown, msg?: string): void;
+
+// assert contains
+function assertStringIncludes(
+  actual: string,
+  expected: string,
+  msg?: string
+): void;
+function assertArrayIncludes(
+  actual: unknown[],
+  expected: unknown[],
+  msg?: string
+): void;
+
+// assert regex
+function assertMatch(actual: string, expected: RegExp, msg?: string): void;
+function assertNotMatch(actual: string, expected: RegExp, msg?: string): void;
+
+// assert object matches a subset of props of object
+function assertObjectMatch(
+  actual: Record<PropertyKey, unknown>,
+  expected: Record<PropertyKey, unknown>
+): void;
+
+// assert expected error
+function assertThrows(
+  fn: () => void,
+  ErrorClass?: Constructor,
+  msgIncludes = "",
+  msg?: string
+): Error;
+function assertThrowsAsync(
+  fn: () => Promise<void>,
+  ErrorClass?: Constructor,
+  msgIncludes = "",
+  msg?: string
+): Promise<Error>;
+```
+
+- assertions allow you to overwrite stnadard err message
+
+```typescript
+Deno.test("Test Custom Message", () => {
+  assertEquals(1, 2, "Values don't match");
+});
+```
+
+- testing module supports custom assertion functions
+
+```typescript
+function assertPowerOf(actual: number, expected: number, msg?: string): void {
+  let received = actual;
+  while (received % expected === 0) {
+    received /= expected;
+  }
+  if (received !== 1) {
+    if (!msg) {
+      msg = `actual: "${actual}" expected to be a power of: "${expected}"`;
+    }
+    throw new AssertionError(msg);
+  }
+}
+
+// utilization
+Deno.test("Test Assert PowerOf", () => {
+  assertPowerOf(8, 2);
+  assertPowerOf(11, 4);
+});
+```
+
+- test coverage drawn from underlying V8 engine with `--coverage flag`
+- default excludes files matching regex `test\.(js|mjs|ts|jsx|tsx)` (excludes remote files, can override this with `--exclude, --include`
+
+`$ deno test --coverage=<output-directory>`
+
+- tests are sanitized to avoid false success, preventing `Deno.exit(0)` for example which would skip the failing test that follows:
+
+```javascript
+Deno.test({
+  name: "false success",
+  fn() {
+    Deno.exit(0);
+  },
+  sanitizeExit: false,
+});
+
+// This test never runs, because the process exits during "false success" test
+Deno.test({
+  name: "failing test",
+  fn() {
+    throw new Error("this test fails");
+  },
+});
+```
+
+# Tools and utilities
+
+## Format
+
+`$ deno fmt <specific-file1> ...`
+`deno fmt --check`
+`cat file.ts | deno fmt`
+
+use `// deno-fmt-ignore` comment to skip formatting a block or ignore entire file with `// deno-fmt-ignore-file`
+
+## Bundler
+
+`$ deno bundle [URL] <name>.bundle.js` outputs a single JS file including all deps of input
+
+- if out file omitted, bundle sent to <code>stdout</code>
+
+run bundle like a module >> output is self-contained ES module where exports from main module supplied via CLI will be available
+`$ deno run my.bundle.js`
+
+```javascript
+// target to be bundled as lib.bundle.js
+export { foo } from "./foo.js"
+export const bar = "bar"
+
+// access imports
+import { bar, foo}  from "./lib.bundle.js
+```
+
+```html
+<!-- load in browser -->
+<script type="module" src="my.bundle.js"></script>
+
+<!-- import into consuming module -->
+<script type="module">
+  import * as website from "website.bundle.js";
+</script>
+```
+
+## Documentation generator
+
+`add.ts`
+
+```javascript
+/**
+ * Adds x and y.
+ * @param {number} x
+ * @param {number} y
+ * @returns {number} Sum of x and y
+ */
+export function add(x: number, y: number): number {
+  return x + y;
+}
+```
+
+`$ deno doc add.ts` >> outputs:
+
+> function add(x: number, y: number): number
+> </br>
+> Adds x and y. @param {number} x @param {number} y @returns {number} Sum of x and y
