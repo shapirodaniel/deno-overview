@@ -1180,7 +1180,7 @@ https://deno.land/std@0.67.0/http/file_server.ts (10.49KB)
 
 ## Linter
 
-`$ deno lint <file> --json`
+`$ deno lint <file> --json`  
 `$ cat file.ts | deno lint -`
 
 [deno_lint API](https://lint.deno.land/)
