@@ -898,7 +898,7 @@ For additional info: [Listening to Windows OS Events](https://docs.microsoft.com
 # Testing in Deno
 
 <details>
-  <summary>Assertion, test-running, and coverage analysis</summary><br/>
+  <summary>Assertion, test-running, coverage analysis, and sanitization</summary><br/>
 
 Deno standard library has built-in [assertion module](https://deno.land/std@0.106.0/testing/asserts.ts)
 
@@ -1007,12 +1007,17 @@ Deno.test("Test Assert PowerOf", () => {
 
 ## Test coverage analysis
 
-- test coverage drawn from underlying V8 engine with `--coverage flag`
-- default excludes files matching regex `test\.(js|mjs|ts|jsx|tsx)` (excludes remote files, can override this with `--exclude, --include`
+- test coverage drawn from underlying V8 engine with `--coverage` flag
+- default excludes files matching regex `test\.(js|mjs|ts|jsx|tsx)`
+- (excludes remote files, can override this with `--exclude, --include`
 
 `$ deno test --coverage=<output-directory>`
 
-- tests are sanitized to avoid false success, preventing `Deno.exit(0)` for example which would skip the failing test that follows:
+<br/>
+
+## Sanitization
+
+- tests are sanitized to avoid false success
 
 ```javascript
 Deno.test({
