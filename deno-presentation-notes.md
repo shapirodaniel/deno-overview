@@ -593,7 +593,6 @@ console.log(await Deno.permissions.query(desc1));
 
 <code>Web Worker API</code>
 
-- execute code in separate thread
 - no workers from blob URLs
 - posted data is serialized to JSON rather than structured cloning algorithm which supports complex types, ex File, Blob, ArrayBuffer (and JSON)
 - ownership can't be transferred between workers
